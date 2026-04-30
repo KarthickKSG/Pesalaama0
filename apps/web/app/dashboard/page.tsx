@@ -1,0 +1,5 @@
+'use client';
+import { useEffect, useState } from 'react'; import axios from 'axios';
+export default function Dashboard(){const [records,setRecords]=useState<any[]>([]); const [title,setTitle]=useState(''); const [content,setContent]=useState('');
+useEffect(()=>{const token=localStorage.getItem('token'); if(token){axios.get(process.env.NEXT_PUBLIC_API_URL+'/api/data',{headers:{Authorization:`Bearer ${token}`}}).then(r=>setRecords(r.data));}},[]);
+return <main className='p-6'><h1 className='text-2xl font-semibold'>Dashboard</h1><form onSubmit={async e=>{e.preventDefault();const token=localStorage.getItem('token'); await axios.post(process.env.NEXT_PUBLIC_API_URL+'/api/data',{title,content},{headers:{Authorization:`Bearer ${token}`}});}} className='space-x-2'><input className='border p-2' value={title} onChange={e=>setTitle(e.target.value)} placeholder='Title'/><input className='border p-2' value={content} onChange={e=>setContent(e.target.value)} placeholder='Content'/><button className='bg-blue-600 text-white px-4 py-2'>Add</button></form><ul>{records.map(r=><li key={r.id}>{r.title}</li>)}</ul></main>}

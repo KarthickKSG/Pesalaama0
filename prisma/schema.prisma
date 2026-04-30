@@ -1,0 +1,45 @@
+generator client { provider = "prisma-client-js" }
+datasource db { provider = "postgresql" url = env("DATABASE_URL") }
+model User {
+  id String @id @default(cuid())
+  email String @unique
+  name String
+  passwordHash String
+  roleId String
+  role Role @relation(fields:[roleId], references:[id])
+  dataRecords DataRecord[]
+  logs ActivityLog[]
+  createdAt DateTime @default(now())
+  @@index([roleId])
+}
+model Role {
+  id String @id @default(cuid())
+  name String @unique
+  users User[]
+  permissions Permission[]
+}
+model Permission {
+  id String @id @default(cuid())
+  roleId String
+  role Role @relation(fields:[roleId], references:[id])
+  key String
+  @@unique([roleId,key])
+}
+model DataRecord {
+  id String @id @default(cuid())
+  userId String
+  user User @relation(fields:[userId], references:[id])
+  title String
+  content String
+  createdAt DateTime @default(now())
+  @@index([userId,createdAt])
+}
+model ActivityLog {
+  id String @id @default(cuid())
+  userId String?
+  user User? @relation(fields:[userId], references:[id])
+  action String
+  metadata Json?
+  createdAt DateTime @default(now())
+  @@index([createdAt])
+}
