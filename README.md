@@ -1,57 +1,40 @@
-# Healthcare SaaS Monorepo (Web + PWA + APK)
+# Firebase Healthcare SaaS Monorepo
 
-## Highlights
-- Next.js App Router full-stack app using Firebase Authentication + Firestore database.
-- Unified Sign In page for all users (`/signin`) with role routing to admin, doctor, patient dashboards.
-- Admin-only doctor account creation flow via server route and Firebase Admin SDK.
-- Minimum 12 pages included: landing, client-registration, prebooking, signin, admin, doctor, patient, appointments, notifications, profile, settings, help, reports.
+This project now uses **Firebase-first architecture** for auth and database.
 
-## Key Routes
-- `/landing`
-- `/client-registration`
-- `/prebooking`
-- `/signin`
-- `/admin` (create doctor account)
-- `/doctor`
-- `/patient`
-- `/appointments`
-- `/notifications`
-- `/profile`
-- `/settings`
-- `/help`
-- `/reports`
+## Firebase Configuration (active)
+Configured in `apps/web/lib/firebase.ts` with:
+- apiKey: `AIzaSyB3SjC0pWLmWcUCx6ptlLT-wd8WZwKR8fs`
+- authDomain: `tool-traker.firebaseapp.com`
+- databaseURL: `https://tool-traker-default-rtdb.firebaseio.com`
+- projectId: `tool-traker`
+- storageBucket: `tool-traker.firebasestorage.app`
+- messagingSenderId: `772466342999`
+- appId: `1:772466342999:web:f17626094f327d3ebab712`
+- measurementId: `G-DLNBFW2NFS`
 
-## Firebase Setup
-Create `.env.local` in `apps/web`:
-```env
-NEXT_PUBLIC_FIREBASE_API_KEY=
-NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=
-NEXT_PUBLIC_FIREBASE_PROJECT_ID=
-NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=
-NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
-NEXT_PUBLIC_FIREBASE_APP_ID=
-FIREBASE_PROJECT_ID=
-FIREBASE_CLIENT_EMAIL=
-FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
-```
+## Required Pages Implemented
+- landing
+- client-registration
+- prebooking
+- signin (single sign in for all users)
+- admin (create doctor)
+- doctor
+- patient
+- appointments
+- notifications
+- profile
+- settings
+- help
+- reports
+
+## Core Flows
+1. Unified SignIn (`/signin`) reads user role and routes to `/admin`, `/doctor`, or `/patient`.
+2. Admin creates doctor accounts via `POST /api/admin/create-doctor`.
+3. Client registration and prebooking are submitted to Firebase via route handlers.
 
 ## Run
 ```bash
 pnpm install
 pnpm --filter @app/web dev
-```
-
-## API Endpoints (Next Route Handlers)
-- `POST /api/client-registration`
-- `POST /api/prebooking`
-- `POST /api/admin/create-doctor`
-
-## APK
-Use Capacitor with the built PWA:
-```bash
-cd apps/web
-pnpm build
-npx cap add android
-npx cap copy android
-npx cap open android
 ```
